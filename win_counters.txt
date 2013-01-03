@@ -1,0 +1,72 @@
+\ASP.NET\Applications Running
+\ASP.NET\Requests Rejected
+\ASP.NET\Requests Queued
+\ASP.NET\Worker Processes Running
+\ASP.NET\Worker Process Restarts
+\ASP.NET\Request Wait Time
+\ASP.NET\Requests Current
+\ASP.NET\Error Events Raised
+\ASP.NET\Request Error Events Raised
+\ASP.NET\Infrastructure Error Events Raised
+\ASP.NET\Requests In Native Queue
+
+\.NET CLR Exceptions(*)\# of Exceps Thrown
+\.NET CLR Exceptions(*)\# of Exceps Thrown / sec
+\.NET CLR Memory(*)\# GC Handles
+\.NET CLR Memory(*)\Allocated Bytes/sec
+\.NET CLR Memory(*)\# Total committed Bytes
+
+\MSSQL$SQLEXPRESS:Buffer Manager\Buffer cache hit ratio
+\MSSQL$SQLEXPRESS:Buffer Manager\Checkpoint pages/sec
+\MSSQL$SQLEXPRESS:Buffer Manager\Page life expectancy
+\MSSQL$SQLEXPRESS:General Statistics\User Connections
+\MSSQL$SQLEXPRESS:Access Methods\Page Splits/sec
+\MSSQL$SQLEXPRESS:General Statistics\Processes blocked
+\MSSQL$SQLEXPRESS:SQL Statistics\Batch Requests/sec
+\MSSQL$SQLEXPRESS:SQL Statistics\SQL Compilations/sec
+\MSSQL$SQLEXPRESS:SQL Statistics\SQL Re-Compilations/sec
+
+\LogicalDisk(*)\% Free Space
+\LogicalDisk(*)\Current Disk Queue Length
+\LogicalDisk(*)\% Disk Time
+\LogicalDisk(*)\Avg. Disk Queue Length
+\LogicalDisk(*)\% Disk Read Time
+\LogicalDisk(*)\Avg. Disk Read Queue Length
+\LogicalDisk(*)\% Disk Write Time
+\LogicalDisk(*)\Avg. Disk Write Queue Length
+
+\PhysicalDisk(*)\Current Disk Queue Length
+\PhysicalDisk(*)\% Disk Time
+\PhysicalDisk(*)\Avg. Disk Queue Length
+\PhysicalDisk(*)\% Disk Read Time
+\PhysicalDisk(*)\Avg. Disk Read Queue Length
+\PhysicalDisk(*)\% Disk Write Time
+\PhysicalDisk(*)\Avg. Disk Write Queue Length
+
+\Memory\Page Faults/sec
+\Memory\Available Bytes
+\Memory\Committed Bytes
+\Memory\Commit Limit
+\Memory\Write Copies/sec
+\Memory\Cache Faults/sec
+
+\Paging File(*)\% Usage
+\Paging File(*)\% Usage Peak
+
+\System\File Read Operations/sec
+\System\File Write Operations/sec
+\System\File Control Operations/sec
+\System\Context Switches/sec
+\System\System Calls/sec
+\System\System Up Time
+\System\Processor Queue Length
+\System\Processes
+\System\Threads
+\System\Exception Dispatches/sec
+
+\Web Service(*)\Current Connections
+\Web Service(*)\Get Requests/sec
+\Web Service(*)\Post Requests/sec
+\Web Service(*)\Put Requests/sec
+\Web Service(*)\Delete Requests/sec
+\Web Service(*)\Trace Requests/sec
