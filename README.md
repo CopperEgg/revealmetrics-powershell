@@ -37,22 +37,22 @@ A CopperEgg account is also required. If you don't have one yet, check it out:
 ```ruby
 git clone http://git@github.com:sjohnsoncopperegg/revealmetrics-powershell.git
 ```
-####Copy the CopperEgg-powershell.zip to the system you want to monitor. Before unzipping the archive, Right-click on Properties, and 'Unblock' the archive.
+* Copy the CopperEgg-powershell.zip to the system you want to monitor. Before unzipping the archive, Right-click on Properties, and 'Unblock' the archive.
 
-####Start Windows Powershell, running as Administrator
+* Start Windows Powershell, running as Administrator
 
-####Set the ExecutionPolicy to RemoteSigned (if you haven't already):
+* Set the ExecutionPolicy to RemoteSigned (if you haven't already):
 
 ```ruby
 Set-ExecutionPolicy RemoteSigned
 ```
-####Create the installation directory, and cd to that directory:
+* Create the installation directory, and cd to that directory:
 
 ```ruby
 New-Item 'c:\Program Files (x86)\CopperEgg\Modules\CopperEgg' -type directory
 cd 'c:\Program Files (x86)\CopperEgg\Modules\CopperEgg'
 ```
-####Create a Powershell profile. If you have already set up a Powershell profile, skip this step.
+* Create a Powershell profile. If you have already set up a Powershell profile, skip this step.
 
 There are a number of different profiles used by Powershell and PowershellISE, and they are in different places. :(
 To see the choices, enter the following:
@@ -65,16 +65,16 @@ The following instructions assume that you will create and edit the AllUsersAllH
 ```ruby
 new-item $PROFILE.AllUsersAllHosts -ItemType file -Force
 ```
-####Edit your powershell profile to include a path to the CopperEgg module directory. Add the following line to your powershell profile:
+* Edit your powershell profile to include a path to the CopperEgg module directory. Add the following line to your powershell profile:
 
 ```ruby
 Set-Location "c:\Program Files (x86)\CopperEgg\Modules\CopperEgg"
 $env:PSModulePath = $env:PSModulePath + ";c:\Program Files (x86)\CopperEgg\Modules\CopperEgg\"
 ```
 
-####Unzip the CopperEgg-powershell.zip file to "c:\Program Files (x86)\CopperEgg\Modules\CopperEgg".
+* Unzip the CopperEgg-powershell.zip file to "c:\Program Files (x86)\CopperEgg\Modules\CopperEgg".
 
-####Edit the CopperEgg_APIKEY.txt file, and replace the text therein with your CopperEgg API key, which you will find in the CopperEgg UI, under Settings.
+* Edit the CopperEgg_APIKEY.txt file, and replace the text therein with your CopperEgg API key, which you will find in the CopperEgg UI, under Settings.
 Save the file, and close it.
 
 ## Usage
