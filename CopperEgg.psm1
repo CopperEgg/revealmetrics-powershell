@@ -112,45 +112,28 @@ export-modulemember -function Send-CEPost
 function New-MetricGroup {
 param(
     [string]$group_name,
+    [string]$versioned_group_name,
     $groupcfg
   )
   Write-Host "Checking for metric group $group_name"
-  $fn = $global:mypath + "\metric_groups.txt"
-  $groups = Get-Content $fn | Where-Object {$_ -match '\S'}
-  $found = 0
-  $idx = 0
-  while($idx -lt $groups.count){
-    $split = $groups[$idx].split(",")
-    if($group_name -eq $split[0]){
-      $versioned =  $split[1]
-      $found = 1
-      break
-    }
-    $idx++
-  }
-  if($found -eq 0) {
-    Write-Host "Metric group not found in metric_groups.txt; no new group created."
-    return $null
-  }
+
   # now see if $versioned exists at CopperEgg
   [string]$cmd =  '/revealmetrics/metric_groups.json'
   $rslt = Send-CEGet $global:apikey $cmd ""
   if($rslt -ne $null){
     $rslt_decode = $rslt | ConvertFrom-Json
-    $mgarray = $rslt_decode | Where-Object {$_.name -eq $versioned}
+    $mgarray = $rslt_decode | Where-Object {$_.name -eq $versioned_group_name}
     if($mgarray -ne $null){
-      Write-Host "Metric group $versioned found; skipping create"
-      return $versioned
+      Write-Host "Metric group $versioned_group_name found; skipping create"
+      return $versioned_group_name
     }
     # else look for later version
     [string]$cmp = $group_name + "_v*"
     $mgarray = $rslt_decode | Where-Object {$_.name -like $cmp} | Sort-Object name -Descending
     if( $mgarray -ne $null){
-      $versioned = $mgarray[0].name
-      Write-Host "Metric group $versioned found; skipping create"
-      $groups[$idx] = $split[0] + "," + $versioned
-      $groups | Out-File $fn
-      return $versioned
+      $versioned_group_name = $mgarray[0].name
+      Write-Host "Metric group $versioned_group_name found; skipping create"
+      return $versioned_group_name
     }
   }
   # metric group doesn't exist ... create it
@@ -158,10 +141,8 @@ param(
   $rslt = Send-CEPost $global:apikey '/revealmetrics/metric_groups.json' $groupcfg
   if($rslt -ne $null){
     $versioned = ($rslt | ConvertFrom-Json).name.ToString()
-    Write-Host "Created metric group $versioned"
-    $groups[$idx] = $split[0] + "," + $versioned
-    $groups | Out-File $fn
-    return $versioned
+    Write-Host "Created metric group $versioned_group_name"
+    return $versioned_group_name
   }
   else {
     Write-Host "Error Creating $group_name"
@@ -274,6 +255,6 @@ if((Test-Path $fullpath) -eq $True) {
 }
 if( $fail -eq $True) {
 	Write-Host "Error: Cannot find $fullpath"
-	Write-Host "Can't continue. Please copy your CopperEgg APIKEY to $fullpath" 
+	Write-Host "Can't continue. Please copy your CopperEgg APIKEY to $fullpath"
 	exit
 }
