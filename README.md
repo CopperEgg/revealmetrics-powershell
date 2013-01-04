@@ -32,7 +32,7 @@ A CopperEgg account is also required. If you don't have one yet, check it out:
 
 ## Installation
 
-####Clone this repository.
+* Clone this repository.
 
 ```ruby
 git clone http://git@github.com:sjohnsoncopperegg/revealmetrics-powershell.git
