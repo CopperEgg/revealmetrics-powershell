@@ -57,7 +57,7 @@ param(
     $req.Headers.Add('Content-Type', 'application/json')
     $data_json = $data | ConvertTo-JSON -Depth 5
     $rslt = $req.UploadString($uri, $data_json)
-    Start-Sleep -s 10
+    Start-Sleep -s 15
   }
 }
 Start-CopperEggJob $MSCounters $group_name $mhj $apikey $cname

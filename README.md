@@ -35,7 +35,7 @@ A CopperEgg account is also required. If you don't have one yet, check it out:
 * Clone this repository.
 
 ```ruby
-git clone http://git@github.com:sjohnsoncopperegg/revealmetrics-powershell.git
+git clone git://github.com/CopperEgg/revealmetrics-powershell.git
 ```
 * Copy the CopperEgg-powershell.zip to the system you want to monitor. Before unzipping the archive, Right-click on Properties, and 'Unblock' the archive.
 
@@ -111,6 +111,49 @@ Remove-AllCopperEgg
 
 The metrics monitored are selected using the win_counters.txt file. You will find notes there about the formatting, and additional detail will be found in Initialize-MetricGroups.ps1
 The dashboards are built in Initialize-Dashboards.ps1. Use that code as a starting point for creating views exactly as you want them.
+
+
+##To Run Your CopperEgg-StartMonitor.ps1 script 'as a service'
+
+Specifically, these instructions are for ensuring that your monitoring powershell scripts resume running after restart or power-cycle. At this point, we do not support running the Powershell scripts as a Windows Service ... but using the Windows Task Scheduler, you can do very close to the same thing.
+
+* As Administrator, enter the Task Scheduler (COntrol Panel-> Administrative Tools->Task Scheduler)
+
+* Create Task General
+  - Name CopperEggTask
+  - When running the task, use the Administrator account.
+  - Run whether user is logged in or not
+  - Run with Highest Privelages
+  - Configure for the OS you are using
+
+* Create Task Trigger
+  - Begin the Task On a Schedule
+  - Daily
+  - set time to current time
+  - Recur every 1 day
+  Advanced Settings:
+  - Repeat task every 5 minutes, for duration Indefinitely
+  Check the Enabled box. Other boxes cleared.
+
+* Create Task Actions
+  - Start a Program
+  Program     C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+  Arguments   -noexit -File "C:\Program Files (x86)\CopperEgg\Modules\CopperEgg\CopperEggTask.ps1"
+  Options field blank
+
+  NOTE: You can select the 32 or 64 bit powershell executable. Above the 64 bit is specified.
+
+* Create Task Conditions
+  - Leave all boxes cleared
+
+* Create Task Settings
+  - Check Allow Task to be run on demand, Run task as soon as possible after scheduled start is missed, and if the task fails, restart every 1 minute
+  - Attempt to restart up to 3 times.
+  - Leave the remaining boxes un-checked.
+  - If the task is already running,
+
+Close the Task Scheduler. CopperEggTask.ps1 should start (if not already started) within 5 minutes.
+
 
 ## Questions / Problems?
 
