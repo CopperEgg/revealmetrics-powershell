@@ -2,6 +2,8 @@
 #	Initialize-Dashboards.ps1 contains sample code for creating a default set of dashboards.
 # Copyright (c) 2012 CopperEgg Corporation. All rights reserved.
 #
+#	Modified in version 0.9.1 to include creating an example 'Backup Monitoring' dashboard
+#
 function Initialize-Dashboards {
 
   # create MSSQL dash
@@ -556,6 +558,37 @@ function Initialize-Dashboards {
             }
     }
     $order = @( "0","1","2","3","4","5" )
+
+    $dashcfg = New-Object PSObject -Property @{
+      "name" = $dash_name;
+      "data" = @{"widgets" = $widgets; "order" = $order}
+    }
+    $result = New-Dashboard $dash_name $dashcfg
+  }
+
+  # create Backup Monitoring dash
+  # This is an example dashboard for UserDefined metrics.
+  if( $global:custom_group -ne $null ) {
+    $dash_name = "Backup Monitoring"
+    $dashcfg = $null
+
+    $widgets = @{
+      "0" = @{
+            "type"="metric";
+            "style"="both";
+            "match"="select";
+            "metric" = @($global:versioned_custom_group_name, "0", "UserDefined_Hours_From_Last_Backup");
+            "match_param"=[string]$global:computer
+            };
+      "1" = @{
+            "type"="metric";
+            "style"="both";
+            "match"="select";
+            "metric" = @($global:versioned_custom_group_name, "1", "UserDefined_Last_Backup_Result");
+            "match_param"=[string]$global:computer
+            }
+    }
+    $order = @( "0","1" )
 
     $dashcfg = New-Object PSObject -Property @{
       "name" = $dash_name;
