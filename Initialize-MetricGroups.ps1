@@ -2,6 +2,7 @@
 #	Initialize-MetricGroups.ps1 contains sample code for creating a default set of metric groups.
 # Copyright (c) 2012 CopperEgg Corporation. All rights reserved.
 #
+#	Updated for version 0.9.1 to include support for UserDefined metrics
 # This script assumes that the following metric groups are defined:
 #
 #   MSSQL
@@ -11,6 +12,7 @@
 #   NET_CLR
 #   Web_Services
 #   System
+#	  UserDefined
 
 function Initialize-MetricGroups {
   [string]$global:aspnet_group_name = "ASP_NET"
@@ -20,6 +22,8 @@ function Initialize-MetricGroups {
   [string]$global:memory_group_name = "System_Memory"
   [string]$global:system_group_name = "System"
   [string]$global:web_group_name = "Web_Services"
+  [string]$global:custom_group_name = "UserDefined"
+
   [string]$global:versioned_aspnet_group_name = "ASP_NET"
   [string]$global:versioned_netclr_group_name = "NET_CLR"
   [string]$global:versioned_mssql_group_name = "MSSQL"
@@ -27,6 +31,7 @@ function Initialize-MetricGroups {
   [string]$global:versioned_memory_group_name = "System_Memory"
   [string]$global:versioned_system_group_name = "System"
   [string]$global:versioned_web_group_name = "Web_Services"
+  [string]$global:versioned_custom_group_name = "UserDefined"
 
 
   $global:aspnet_group = $null
@@ -36,10 +41,12 @@ function Initialize-MetricGroups {
   $global:memory_group = $null
   $global:system_group = $null
   $global:web_group = $null
+  $global:custom_group = $null
+
   $global:master_hash = @{}
   $global:mssql_head = $null
 
-  # Read in win_counters.txt, which lists the set of metric groups that CopperEgg chose as defaults.
+  # Read in win_counters.txt, which lists the defined metric groups.
   #
 
   $fn = $global:mypath + "\win_counters.txt"
@@ -52,6 +59,7 @@ function Initialize-MetricGroups {
   [string[]]$mg_webservices = @()
   [string[]]$mg_storage = @()
   [string[]]$mg_system = @()
+  [string[]]$mg_custom = @()
 
   # NOTE: Remove-CounterInstances replaces the '*' in 'PathsWithInstances' with a 'total' instance, where possible.
   # This was done to avoid creating a huge number of default metrics.
@@ -212,6 +220,22 @@ function Initialize-MetricGroups {
           }
         }
       }
+      elseif ($mg -eq $global:custom_group_name ) {
+        $global:versioned_custom_group_name = $versioned
+        $i++
+        $line = $CounterList[$i]
+        $Err = $null
+        while( ($line.StartsWith("[metric_group]") -ne $True) -and  ($i -lt $CounterList.length) ) {
+          if( $line.StartsWith("\") ){
+            $mg_custom = $mg_custom + (Remove-CounterInstances($line))
+          }
+          $i++
+          if( $i -lt $CounterList.Length ) {
+            $line = $CounterList[$i]
+          }
+        }
+
+      }
     }
     else {
       $i++
@@ -224,6 +248,9 @@ function Initialize-MetricGroups {
   $ce_memory = @()
   $ce_system = @()
   $ce_webservices = @()
+  $ce_custom = @()
+
+
   [string]$path = $null
   $ValidMetricGroups = 0
 
@@ -282,6 +309,16 @@ function Initialize-MetricGroups {
       $ce_webservices =  $ce_webservices + $name
     }
   }
+  if( $mg_custom -ne $null) {
+    $ValidMetricGroups++
+    foreach( $path in $mg_custom) {
+      $name = (ConvertTo-CEName($path))
+      # hash table entries are 'variable', 'function' for custom metrics
+      [string]$fxn = ($name + "_function")
+      $global:master_hash.Add($name, $fxn)
+      $ce_custom =  $ce_custom + $name
+    }
+  }
 
   # mg_ prefix: collections of windows-readable counter path names
   # ce_prefix:  same collections, escaped for use in revealmetrics
@@ -293,6 +330,7 @@ function Initialize-MetricGroups {
   #   $mg_memory            $ce_memory
   #   $mg_system            $ce_system
   #   $mg_webservices       $ce_webservices
+  #   $mg_custom            $ce_custom
 
   # The necessary structures and variables are set up.
   # Now we'll create corresponding metric groups at CopperEgg
@@ -303,7 +341,7 @@ function Initialize-MetricGroups {
   if( $mg_asp_net -ne $null ) {
     $group_name = $global:aspnet_group_name
     $group_label = "ASP.NET metrics"
-    $freq = 15
+    $freq = 60
     $groupcfg = $null
 
     $marray = @(
@@ -340,7 +378,7 @@ function Initialize-MetricGroups {
   if( $mg_net_clr -ne $null ) {
     $group_name = $global:netclr_group_name
     $group_label = ".NET CLR metrics"
-    $freq = 15
+    $freq = 60
 
     $marray = @(
       @{"type"="ce_counter";   "name"="NET_CLR_Exceptions_global_Number_of_Exceps_Thrown";           "label"=".NET Global Number of Exceptions";  "unit"="Exceptions"},
@@ -370,7 +408,7 @@ function Initialize-MetricGroups {
   if( $mg_mssql -ne $null ) {
     $group_name = $global:mssql_group_name
     $group_label = "MSSQL metrics"
-    $freq = 15
+    $freq = 60
 
     $groupcfg = $null
 
@@ -409,7 +447,7 @@ function Initialize-MetricGroups {
 
     $group_name = $global:storage_group_name
     $group_label = "Storage metrics"
-    $freq = 15
+    $freq = 60
 
     $groupcfg = $null
 
@@ -454,7 +492,7 @@ function Initialize-MetricGroups {
 
     $group_name = $global:memory_group_name
     $group_label = "System Memory"
-    $freq = 15
+    $freq = 60
 
     $groupcfg = $null
 
@@ -488,7 +526,7 @@ function Initialize-MetricGroups {
 
     $group_name = $global:system_group_name
     $group_label = "System metrics"
-    $freq = 15
+    $freq = 60
 
     $groupcfg = $null
 
@@ -530,7 +568,7 @@ function Initialize-MetricGroups {
 
     $group_name = $global:web_group_name
     $group_label = "Web Services metrics"
-    $freq = 15
+    $freq = 60
 
     $groupcfg = $null
 
@@ -560,6 +598,42 @@ function Initialize-MetricGroups {
       $global:versioned_web_group_name = $rslt
     }
   }
+
+  #  create UserDefined metric group
+  # Currently, you have to create the $marray table manually.
+
+  if( $mg_custom -ne $null ) {
+
+    $group_name = $global:custom_group_name
+    $group_label = "User Defined Metrics"
+
+	# *** NOTE: we're only checking this metric every 15 minutes
+    $freq = 900
+    $groupcfg = $null
+
+    $marray = @(
+      @{"type"="ce_gauge_f";   "name"="UserDefined_Hours_From_Last_Backup";   "label"="Hours from Last Backup";    "unit"="Hours" },
+      @{"type"="ce_gauge";      "name"="UserDefined_Last_Backup_Result";       "label"="Last Backup Result";  }
+      )
+
+    $global:custom_group =  @{}
+    $global:custom_group.add("name",$group_name)
+    $global:custom_group.add("label",$group_label)
+    $global:custom_group.add("frequency",$freq)
+    $global:custom_group.add("CE_Variables",[string[]]$ce_custom)
+
+    $groupcfg = New-Object PSObject -Property @{
+      "name" = $group_name;
+      "label" = $group_label;
+      "frequency" = $freq;
+      "metrics" = $marray
+    }
+    $rslt = New-MetricGroup $group_name $global:versioned_custom_group_name $groupcfg
+    if( $rslt -ne $null ) {
+      $global:versioned_custom_group_name = $rslt
+    }
+  }
+
 
   #Update the win_counters.txt file
   $fn = $global:mypath + "\win_counters.txt"
@@ -592,6 +666,9 @@ function Initialize-MetricGroups {
       }
       elseif($mg -eq $global:web_group_name) {
         $CounterList[$i] = '[metric_group]' + $global:web_group_name + ',' + $global:versioned_web_group_name
+      }
+      elseif($mg -eq $global:custom_group_name) {
+        $CounterList[$i] = '[metric_group]' + $global:custom_group_name + ',' + $global:versioned_custom_group_name
       }
     }
     $i++

@@ -127,6 +127,14 @@ param(
       Write-Host "Metric group $versioned_group_name found; skipping create"
       return $versioned_group_name
     }
+    # else look for later version
+    #[string]$cmp = $group_name + "_v*"
+    #$mgarray = $rslt_decode | Where-Object {$_.name -like $cmp} | Sort-Object name -Descending
+    #if( $mgarray -ne $null){
+    #  $versioned_group_name = $mgarray[0].name
+    #  Write-Host "Metric group $versioned_group_name found; skipping create"
+    #  return $versioned_group_name
+    #}
   }
   # metric group doesn't exist ... create it
   Write-Host "Not Found. Creating metric group $versioned_group_name"

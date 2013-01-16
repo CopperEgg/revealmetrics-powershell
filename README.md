@@ -20,6 +20,11 @@ This module provides a 'Works-Out-of-the-Box' set of default metrics and dashboa
 
 The module was created in response to customer requests for Powershell sample code using the CopperEgg API.
 
+## Recent Updates:  version 0.9.1
+This release includes the capability to create user-defined metrics ... metrics that you create to monitor your application or infrastructure.
+A sample dashboard and two metrics are provided to get you started by monitoring any of your background tasks, and their return codes. Check out
+win_counters.txt, and the UserDefined.psm1 module for more info!
+
 ## Requirements
 This release requires Powershell v3.0, which ships with Windows 8 and Windows Server 2012.
 It has also been tested on Windows Server 2008r2 and Windows 7, with Powershell v3.0 installed.
@@ -94,7 +99,7 @@ Initialize-Dashboards
 ```ruby
 Start-CopperEggMonitor
 ```
-The module will set up a number of background jobs. You can continue to use you powershell UI, and the monitoring will continue.
+The module will set up a number of background jobs. You can continue to use your powershell UI, and the monitoring will continue.
 Now go have a look at your CopperEgg UI, and you will see your new dashboards up and running!
 
 ####To stop monitoring:

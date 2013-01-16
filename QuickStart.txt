@@ -2,8 +2,12 @@ This is a brief set of step-by-step instructions for getting started with the Co
 
 The CopperEgg powershell module is intended to enable you to use the CopperEgg API to create custom metrics, and create custom dashboards where you can group your metrics as best fits your needs.
 
-The module includes a set of default metrics and dashboards, all intended to demonstrate how to quickly get up to speed on using the CopperEgg API ... so that you can monitor what you want to monitor, and not be restricted by pre-canned software.
+The module includes a set of default metrics and dashboards, all intended to demonstrate how to quickly you can get up to speed on using the CopperEgg API ... so that you can monitor what you want to monitor, and not be restricted by pre-canned software.
 
+Recent Updates:  version 0.9.1
+This release includes the capability to create user-defined metrics... metrics that you create to monitor your application or infrastructure.
+A sample dashboard and two metrics are provided to get you started by monitoring any of your background tasks, and their return codes. Check out
+win_counters.txt, and the UserDefined.psm1 module for more info!
 
 Requirements:
   - powershell v3
@@ -105,7 +109,7 @@ What Next?
 In the CopperEgg Module directory, you will find a file named win_counters.txt. (win_counters_defaults.txt is a duplicate, provided for your convenience. It is not used by the modules.)
 The CopperEGg default metric groups and counters are defined there.
 
-More detailed documentation is being prepared right now, as is a more automated install.
+See the README.md for more information, including the ability to run your CopperEgg application and infrastructure metrics in the background, 'like a service.'
 If you have any questions or problems, please let us know right away!
 
 CopperEgg
