@@ -1,12 +1,16 @@
 #
-#    Start-CopperEggJob.ps1 : a minimal background monitoring job.
+#    Start-CustomCopperEggJob.ps1:	 This script represents a background task, and is kicked-off from Start-CopperEggMonitor.
+#
+#	This script does not rely on Get-Counter ... for each monitored metric, this routine expects a variable name and a function that can be called
+#	to retrieve the value for that variable.
 #
 # Copyright (c) 2012 CopperEgg Corporation. All rights reserved.
 #
-param([string[]]$MSCounters,[string]$group_name,[string]$mhj,[string]$apikey,[string]$cname,[string]$mypath,$freq)
-function Start-CopperEggJob {
+#
+param([string[]]$CE_Variables,[string]$group_name,[string]$mhj,[string]$apikey,[string]$cname,[string]$mypath,$freq)
+function Start-CustomCopperEggJob {
 param(
-  [string[]]$MSCounters,
+  [string[]]$CE_Variables,
   [string]$group_name,
   [string]$mhj,
   [string]$apikey,
@@ -14,8 +18,8 @@ param(
   [string]$mypath,
   $freq
   )
-  # Convert the result into an array of strings so it works with get-counter.
-  [string[]]$result = $MSCounters.replace(",","`n")
+  [string]$fullpath = $mypath + '\UserDefined.psm1'
+  import-module $fullpath
   $metric_data = @{}
   [int]$epochtime = 0
   $unixEpochStart = new-object DateTime 1970,1,1,0,0,0,([DateTimeKind]::Utc)
@@ -23,23 +27,13 @@ param(
   While($True) {
     $metric_data = $null
     $metric_data = new-object @{}
-    $samples = Get-Counter -Counter $result
-    foreach($counter in $samples){
-      $sample=$counter.CounterSamples[0]
-      if($sample.Timestamp.Kind -eq 'Local'){
-        [DateTime]$utc = $sample.Timestamp.ToUniversalTime()
-      }else{
-        [DateTime]$utc = $sample.Timestamp
-      }
+
+    foreach($var in $CE_Variables){
+      $fxn = ($newhash | Select-Object $var).$var.ToString()
+      $fxnrslt  = & $fxn
+      [DateTime]$utc = [System.DateTime]::Now.ToUniversalTime()
       $epochtime=($utc - $unixEpochStart).TotalSeconds
-      foreach($sample in $counter.CounterSamples){
-        [string]$path = $sample.Path.ToString()
-        if ($path.StartsWith('\\') -eq 'True'){
-          [int]$off = $path.IndexOfAny('\', 2)
-          [string]$path = $path.Substring($off).ToString()
-        }
-        $metric_data.Add( ($newhash | Select-Object $path).$path.ToString(), $sample.CookedValue )
-      }
+      $metric_data.Add($var, $fxnrslt)
     }
     $apicmd = '/revealmetrics/samples/' + $group_name + '.json'
     $payload = New-Object PSObject -Property @{
@@ -63,4 +57,4 @@ param(
     Start-Sleep -s $freq
   }
 }
-Start-CopperEggJob $MSCounters $group_name $mhj $apikey $cname $mypath $freq
+Start-CustomCopperEggJob $CE_Variables $group_name $mhj $apikey $cname $mypath $freq
