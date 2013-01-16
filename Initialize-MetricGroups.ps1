@@ -607,8 +607,8 @@ function Initialize-MetricGroups {
     $group_name = $global:custom_group_name
     $group_label = "User Defined Metrics"
 
-	# *** NOTE: we're only checking this metric every 10 minutes
-    $freq = 600
+	# *** NOTE: we're only checking this metric every 15 minutes
+    $freq = 900
     $groupcfg = $null
 
     $marray = @(
