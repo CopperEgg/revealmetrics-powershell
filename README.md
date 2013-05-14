@@ -20,7 +20,11 @@ This module provides a 'Works-Out-of-the-Box' set of default metrics and dashboa
 
 The module was created in response to customer requests for Powershell sample code using the CopperEgg API.
 
-## Recent Updates:  version 0.9.1
+## Recent Updates:  
+version 0.9.2 
+Fixed the uncommented-comment in win_ctrs.txt, and updated CopperEgg.psm1 to fix a problem when sending metrics.
+
+version 0.9.1
 This release includes the capability to create user-defined metrics ... metrics that you create to monitor your application or infrastructure.
 A sample dashboard and two metrics are provided to get you started by monitoring any of your background tasks, and their return codes. Check out
 win_counters.txt, and the UserDefined.psm1 module for more info!

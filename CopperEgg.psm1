@@ -233,7 +233,7 @@ param(
       [string]"identifier"=$global:computer.ToString();
       "values"=$metric_data
     }
-    $rslt = Send-CEPost '3Kz4RsZoswHnz012' $apicmd $payload
+    $rslt = Send-CEPost $global:apikey $apicmd $payload
     Start-Sleep -s 10
     $i++
   }
